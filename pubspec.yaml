@@ -6,7 +6,7 @@ description: Built_redux provider for Flutter
 homepage: https://github.com/davidmarne/flutter_built_redux
 dependencies:
   built_redux:
-    path:  ../built_redux
+    # path:  ../built_redux
   flutter:
     sdk: flutter
   meta:

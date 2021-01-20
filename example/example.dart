@@ -3,9 +3,8 @@ library example;
 import 'package:built_redux/built_redux.dart';
 import 'package:flutter_built_redux/flutter_built_redux.dart';
 import 'package:flutter/material.dart' hide Builder;
-import 'package:built_value/built_value.dart';
 
-part 'example.g.dart';
+import 'counter.dart';
 
 void main() {
   // create the store
@@ -37,8 +36,8 @@ class ConnectionExample extends StatelessWidget {
               return new Scaffold(
                 body: new Row(
                   children: <Widget>[
-                    new RaisedButton(
-                      onPressed: actions.increment,
+                    TextButton(
+                      onPressed: () => actions.increment,
                       child: new Text('Increment'),
                     ),
                     new Text('Count: $count'),
@@ -77,12 +76,11 @@ class CounterWidget extends StoreConnector<Counter, CounterActions, int> {
   int connect(Counter state) => state.count;
 
   @override
-  Widget build(BuildContext context, int count, CounterActions actions) =>
-      new Scaffold(
+  Widget build(BuildContext context, int count, CounterActions actions) => new Scaffold(
         body: new Row(
           children: <Widget>[
-            new RaisedButton(
-              onPressed: actions.increment,
+            new TextButton(
+              onPressed: () => actions.increment,
               child: new Text('Increment'),
             ),
             new Text('Count: $count'),
@@ -93,20 +91,3 @@ class CounterWidget extends StoreConnector<Counter, CounterActions, int> {
 
 // Built redux counter state, actions, and reducer
 
-ReducerBuilder<Counter, CounterBuilder> reducerBuilder =
-    new ReducerBuilder<Counter, CounterBuilder>()
-      ..add(CounterActionsNames.increment, (s, a, b) => b.count++);
-
-abstract class CounterActions extends ReduxActions {
-  factory CounterActions() => new _$CounterActions();
-  CounterActions._();
-
-  ActionDispatcher<Null> get increment;
-}
-
-abstract class Counter implements Built<Counter, CounterBuilder> {
-  factory Counter() => new _$Counter._(count: 0);
-  Counter._();
-
-  int get count;
-}
