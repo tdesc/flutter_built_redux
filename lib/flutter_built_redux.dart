@@ -37,11 +37,9 @@ class StoreConnection<StoreState, Actions extends ReduxActions, LocalState>
 
   StoreConnection({
     @required LocalState connect(StoreState state),
-    @required
-        Widget builder(BuildContext context, LocalState state, Actions actions),
+    @required Widget builder(BuildContext context, LocalState state, Actions actions),
     Key key,
-  })
-      : assert(connect != null, 'StoreConnection: connect must not be null'),
+  })  : assert(connect != null, 'StoreConnection: connect must not be null'),
         assert(builder != null, 'StoreConnection: builder must not be null'),
         _connect = connect,
         _builder = builder,
@@ -61,8 +59,8 @@ class StoreConnection<StoreState, Actions extends ReduxActions, LocalState>
 /// [Actions] is the generic tyoe of your built_redux store's actions contiainer
 /// [LocalState] is the state from your store that this widget needs to render.
 /// [LocalState] should be comparable. It is recommended to only use primitive or built types.
-abstract class StoreConnector<StoreState, Actions extends ReduxActions,
-    LocalState> extends StatefulWidget {
+abstract class StoreConnector<StoreState, Actions extends ReduxActions, LocalState>
+    extends StatefulWidget {
   StoreConnector({Key key}) : super(key: key);
 
   /// [connect] takes the current state of the redux store and retuns an object that contains
@@ -91,8 +89,7 @@ class _StoreConnectorState<StoreState, Actions extends ReduxActions, LocalState>
 
   Store get _store {
     // get the store from the ReduxProvider ancestor
-    final ReduxProvider reduxProvider =
-        context.inheritFromWidgetOfExactType(ReduxProvider);
+    final ReduxProvider reduxProvider = context.dependOnInheritedWidgetOfExactType<ReduxProvider>();
 
     // if it is not found raise an error
     assert(reduxProvider != null,
@@ -125,9 +122,8 @@ class _StoreConnectorState<StoreState, Actions extends ReduxActions, LocalState>
     _state = widget.connect(_store.state as StoreState);
 
     // listen to changes
-    _storeSub = _store
-        .substateStream((state) => widget.connect(state as StoreState))
-        .listen((change) {
+    _storeSub =
+        _store.substateStream((state) => widget.connect(state as StoreState)).listen((change) {
       setState(() {
         _state = change.next;
       });
@@ -143,8 +139,7 @@ class _StoreConnectorState<StoreState, Actions extends ReduxActions, LocalState>
   }
 
   @override
-  Widget build(BuildContext context) =>
-      widget.build(context, _state, _store.actions as Actions);
+  Widget build(BuildContext context) => widget.build(context, _state, _store.actions as Actions);
 }
 
 /// [ReduxProvider] provides access to the redux store to descendant widgets.
